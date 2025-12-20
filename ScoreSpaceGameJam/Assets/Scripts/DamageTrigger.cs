@@ -1,8 +1,11 @@
 using UnityEngine;
+using System;
 
 public class DamageTrigger : MonoBehaviour
 {
     [SerializeField] BoxCollider2D boxCollider;
+
+    public static event Action OnLifeChanged;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -17,7 +20,7 @@ public class DamageTrigger : MonoBehaviour
         {
             Debug.Log("You lost a life");
 
-            //LOSS OF 1 LIFE CODE
+            GameManager.Instance?.LoseLife(1);
         }
     }
 }
