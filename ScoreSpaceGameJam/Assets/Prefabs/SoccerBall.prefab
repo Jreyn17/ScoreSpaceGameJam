@@ -115,7 +115,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!58 &-6188077499652121470
 CircleCollider2D:
@@ -168,3 +168,4 @@ MonoBehaviour:
   rb: {fileID: 6972996167443645379}
   sr: {fileID: 1175397769905504766}
   collider: {fileID: -6188077499652121470}
+  nextKickTime: 0

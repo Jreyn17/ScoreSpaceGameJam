@@ -1,19 +1,22 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D), typeof(Collider2D))]
 public class Kicker : MonoBehaviour
 {
     [Header("Kick Feel")]
-    [SerializeField] private float baseImpulse = 0.4f;     
-    [SerializeField] private float impulseScale = 0.16f;   
-    [SerializeField] private float minSwipeSpeed = 0.1f;   
-    [SerializeField] private float maxSwipeSpeed = 35f;    
+    [SerializeField] private float baseImpulse = 0.4f;
+    [SerializeField] private float impulseScale = 0.16f;
+    [SerializeField] private float minSwipeSpeed = 5f;
+    [SerializeField] private float maxSwipeSpeed = 35f;
     [SerializeField] private float snapExponent = 1.6f;
 
-    [Header("")]
+    [Header("Direction")]
     [SerializeField] private float pushAwayBias = 0.2f;   //blends into direction
     [SerializeField] private float kickCooldown = 0.25f;  //cooldown between kicks on same ball
 
-    [SerializeField] private Camera cam; 
+    [Header("References")]
+    [SerializeField] private Camera cam;
+    [SerializeField] private Rigidbody2D kickerRb;
 
     private Vector2 prevMouseWorld;
     private Vector2 swipeVelocity;
@@ -21,9 +24,6 @@ public class Kicker : MonoBehaviour
 
     private void Awake()
     {
-        //Grab cam
-        if (cam == null) cam = Camera.main;
-
         //World coords
         prevMouseWorld = GetMouseWorld();
         targetPos = prevMouseWorld;
@@ -42,8 +42,7 @@ public class Kicker : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position = targetPos;
-
+        kickerRb.MovePosition(targetPos);
     }
 
     private Vector2 GetMouseWorld()
@@ -53,13 +52,13 @@ public class Kicker : MonoBehaviour
         return new Vector2(worldPos.x, worldPos.y);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
+        Collider2D other = collision.collider;
+
         if (!other.CompareTag("Ball")) return;
         if (!other.TryGetComponent<Rigidbody2D>(out var rb)) return;
-
-        Ball ball = other.gameObject.GetComponent<Ball>();
-        if (ball == null) return;
+        if (!other.TryGetComponent<Ball>(out var ball)) return;
 
         if (Time.time < ball.nextKickTime) return;
 
@@ -72,7 +71,7 @@ public class Kicker : MonoBehaviour
         //Swipe direction
         Vector2 dir = swipeVelocity.normalized;
 
-        Vector2 awayRaw = (Vector2)rb.position - (Vector2)transform.position;
+        Vector2 awayRaw = (Vector2)rb.position - (Vector2)kickerRb.position;
         Vector2 away = awayRaw.sqrMagnitude > 0.0001f ? awayRaw.normalized : Vector2.zero;
 
         //Mix in push away bias

@@ -11,12 +11,16 @@ public class GameManager : MonoBehaviour
     public static event Action<int> OnPointsChanged;
     public static event Action OnGameStarted;
     public static event Action OnGameOver;
+    public static event Action<int> OnLevelUp;
 
-    private int startingLives = 3;
+    private int startingLives = 5;
 
     public int points { get; private set; }
     public int lives { get; private set; }
     public bool IsRunning { get; private set; } //Is game running?
+
+    private int level = 1; //Levels
+    private int nextLevelUpScore = 5; //IF I WANT IT TO BE EVERY CERTAIN AMOUNT OF POINTS. ALSO COULD MAKE IT A LIST FOR SPECIFIC VALUES
 
     private void Awake()
     {
@@ -35,6 +39,9 @@ public class GameManager : MonoBehaviour
         points = 0;
         lives = Mathf.Max(0, startingLives);
         IsRunning = false;
+
+        level = 1;
+        nextLevelUpScore = 5;
 
         OnPointsChanged?.Invoke(points);
         OnLivesChanged?.Invoke(lives);
@@ -55,13 +62,21 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
-    public void AddPoints(int amount)
+    public void UpdatePoints(int amount)
     {
         if (!IsRunning) return;
         if (lives <= 0) return;
 
         points += amount; //Add points
-        OnPointsChanged?.Invoke(points); //Invoke subscribers (UIManager)
+        OnPointsChanged?.Invoke(points); //Invoke subs (UIManager)
+
+        while (points >= nextLevelUpScore)
+        {
+            level++;
+            OnLevelUp?.Invoke(level);
+
+            nextLevelUpScore += 1;
+        }
     }
 
     //Might need to change to ChangeLife (if shop added)
@@ -72,7 +87,7 @@ public class GameManager : MonoBehaviour
 
         //Subtract lives
         lives = Mathf.Max(0, lives - amount);
-        OnLivesChanged?.Invoke(lives);
+        OnLivesChanged?.Invoke(lives); //Invoke subs (UIManager)
 
         //If no more lives, initiate GameOver sequence
         if (lives == 0)

@@ -5,20 +5,26 @@ public class BallSpawner : MonoBehaviour
     [SerializeField] GameObject ball;
 
     [Header("Time")]
-    private float spawnInterval = 3f; //Starting interval is 5       //THIS WILL SCALE WITH LEVELS
+    [SerializeField] private float startSpawnInterval = 5f; //Starting interval is 5
+
+    [SerializeField] private float spawnInterval; //Time between spawns
     private float timer = 0f; //Timer
     private bool timerRunning = false; //If game is running, timer is running
 
     void OnEnable()
     {
+        GameManager.OnGameStarted += ResetSpawner;
         GameManager.OnGameStarted += StartTimer;
         GameManager.OnGameOver += StopTimer;
+        GameManager.OnLevelUp += LevelUp;
     }
 
     void OnDisable()
     {
+        GameManager.OnGameStarted -= ResetSpawner;
         GameManager.OnGameStarted -= StartTimer;
         GameManager.OnGameOver -= StopTimer;
+        GameManager.OnLevelUp -= LevelUp;
     }
 
     void Update()
@@ -35,6 +41,12 @@ public class BallSpawner : MonoBehaviour
         }
     }
 
+    private void ResetSpawner()
+    {
+        spawnInterval = startSpawnInterval;
+        timer = 0f;
+    }
+
     private void StartTimer()
     {
         timerRunning = true;
@@ -43,6 +55,11 @@ public class BallSpawner : MonoBehaviour
     private void StopTimer()
     {
         timerRunning = false;
+    }
+
+    private void LevelUp(int level)
+    {
+        spawnInterval -= 0.5f;
     }
 
     private void SpawnBall()

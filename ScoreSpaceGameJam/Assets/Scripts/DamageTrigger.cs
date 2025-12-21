@@ -5,8 +5,6 @@ public class DamageTrigger : MonoBehaviour
 {
     [SerializeField] BoxCollider2D boxCollider;
 
-    public static event Action OnLifeChanged;
-
     void OnTriggerEnter2D(Collider2D other)
     {
         //Grab ball component from ball
@@ -23,6 +21,8 @@ public class DamageTrigger : MonoBehaviour
             Debug.Log("You lost a life");
 
             GameManager.Instance?.LoseLife(1);
+
+            Destroy(other.gameObject);
         }
     }
 }
