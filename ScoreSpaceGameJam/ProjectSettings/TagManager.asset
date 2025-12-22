@@ -50,5 +50,8 @@ TagManager:
   - name: Barriers
     uniqueID: 4117637533
     locked: 0
+  - name: Balls
+    uniqueID: 1079620825
+    locked: 0
   m_RenderingLayers:
   - Default
