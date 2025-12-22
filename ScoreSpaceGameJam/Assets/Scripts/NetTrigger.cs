@@ -5,6 +5,10 @@ public class NetTrigger : MonoBehaviour
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] SpriteRenderer spriteRenderer;
 
+    [SerializeField] AudioSource scoringDingsSource;
+    [SerializeField] AudioClip positiveDing;
+    [SerializeField] AudioClip negativeDing;
+
     void OnTriggerStay2D(Collider2D other)
     {
         SpriteRenderer ballRenderer = other.GetComponent<SpriteRenderer>();
@@ -24,6 +28,7 @@ public class NetTrigger : MonoBehaviour
         {
             Debug.Log("You scored a point!");
 
+            scoringDingsSource.PlayOneShot(positiveDing);
             GameManager.Instance?.UpdatePoints(1);
 
             Destroy(other.gameObject);
@@ -32,7 +37,8 @@ public class NetTrigger : MonoBehaviour
         {
             Debug.Log("You scored for the wrong team!");
 
-            GameManager.Instance?.UpdatePoints(-1);
+            scoringDingsSource.PlayOneShot(negativeDing);
+            GameManager.Instance?.UpdatePoints(-2);
 
             Destroy(other.gameObject);
         }

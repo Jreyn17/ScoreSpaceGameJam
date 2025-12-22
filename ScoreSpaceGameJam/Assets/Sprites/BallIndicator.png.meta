@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: ce11e3a69ecd5bb4b9bb3dc30ff1bd85
+guid: d5429afa43f1d8f4680b600a15dbe480
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7258956668317465581
-    second: Tall Crate_0
+      213: -5601968957879943336
+    second: BallIndicator_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Tall Crate_0
+      name: BallIndicator_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 134
-        height: 318
+        width: 50
+        height: 50
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3140cf8ae51034b90800000000000000
-      internalID: -7258956668317465581
+      spriteID: 85ffccec9eec142b0800000000000000
+      internalID: -5601968957879943336
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Tall Crate_0: -7258956668317465581
+      BallIndicator_0: -5601968957879943336
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

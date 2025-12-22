@@ -22,6 +22,9 @@ public class Kicker : MonoBehaviour
     private Vector2 swipeVelocity;
     private Vector2 targetPos;
 
+    [SerializeField] AudioSource impactSource;
+    [SerializeField] AudioClip impact;
+
     private void Awake()
     {
         //World coords
@@ -59,6 +62,8 @@ public class Kicker : MonoBehaviour
         if (!other.CompareTag("Ball")) return;
         if (!other.TryGetComponent<Rigidbody2D>(out var rb)) return;
         if (!other.TryGetComponent<Ball>(out var ball)) return;
+
+        impactSource.PlayOneShot(impact);
 
         if (Time.time < ball.nextKickTime) return;
 

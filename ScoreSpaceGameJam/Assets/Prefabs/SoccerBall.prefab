@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 1188731168455562938}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.4584072, y: 1.0292006, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -168,4 +168,5 @@ MonoBehaviour:
   rb: {fileID: 6972996167443645379}
   sr: {fileID: 1175397769905504766}
   collider: {fileID: -6188077499652121470}
+  launchIndicator: {fileID: 7859028136145391658, guid: 825b23840686bff41916cee3dba75a95, type: 3}
   nextKickTime: 0

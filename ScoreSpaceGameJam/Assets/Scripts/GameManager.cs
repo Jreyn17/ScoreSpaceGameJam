@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class GameManager : MonoBehaviour
     public static event Action OnGameStarted;
     public static event Action OnGameOver;
     public static event Action<int> OnLevelUp;
+    public static event Action<string, int> OnSubmitScore;
+
+    [SerializeField] private ProfileManager profileManager;
+
+    [SerializeField] private GameObject leaderboardPanel;
+    [SerializeField] private GameObject rulesPanel;
 
     private int startingLives = 3;
 
@@ -20,9 +27,13 @@ public class GameManager : MonoBehaviour
     public int highScore { get; private set; }
     public int lives { get; private set; }
     public bool IsRunning { get; private set; } //Is game running?
+    public int startingHighScore { get; private set; } //Store this for leaderboard
 
     private int level = 1; //Levels
     private int nextLevelUpScore = 5; //IF I WANT IT TO BE EVERY CERTAIN AMOUNT OF POINTS. ALSO COULD MAKE IT A LIST FOR SPECIFIC VALUES
+
+    [SerializeField] AudioSource buttonSource;
+    [SerializeField] AudioClip buttonClick;
 
     private void Awake()
     {
@@ -33,13 +44,15 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
 
+
         ResetGameState();
     }
 
     private void ResetGameState()
     {
         points = 0;
-        highScore = PlayerPrefs.GetInt("hs", 0);
+        highScore = PlayerPrefs.GetInt("hs3", 0);
+        startingHighScore = highScore;
         lives = Mathf.Max(0, startingLives);
         IsRunning = false;
 
@@ -53,16 +66,44 @@ public class GameManager : MonoBehaviour
     #region Buttons
     public void OnPlayClicked()
     {
+
         ResetGameState();
         IsRunning = true;
 
         OnGameStarted?.Invoke();
         OnHighScore?.Invoke(highScore);
+
+        buttonSource.PlayOneShot(buttonClick);
+
+        Cursor.visible = false;
     }
 
     public void OnLeaderboardClicked()
     {
+        if (leaderboardPanel.activeSelf)
+        {
+            leaderboardPanel.SetActive(false);
+        }
+        else
+        {
+            leaderboardPanel.SetActive(true);
+        }
 
+        buttonSource.PlayOneShot(buttonClick);
+    }
+
+    public void OnRulesClicked()
+    {
+        if (rulesPanel.activeSelf)
+        {
+            rulesPanel.SetActive(false);
+        }
+        else
+        {
+            rulesPanel.SetActive(true);
+        }
+
+        buttonSource.PlayOneShot(buttonClick);
     }
     #endregion
 
@@ -78,7 +119,7 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log(points);
             highScore = points;
-            PlayerPrefs.SetInt("hs", highScore);
+            PlayerPrefs.SetInt("hs3", highScore);
             PlayerPrefs.Save();
             OnHighScore?.Invoke(highScore);
         }
@@ -105,7 +146,15 @@ public class GameManager : MonoBehaviour
         //If no more lives, initiate GameOver sequence
         if (lives == 0)
         {
+            if (highScore > startingHighScore)
+            {
+                SubmitScore();
+            }
+
             IsRunning = false;
+
+            Cursor.visible = true;
+
             OnGameOver?.Invoke();
             GameObject[] balls = GameObject.FindGameObjectsWithTag("Ball");
             
@@ -114,5 +163,10 @@ public class GameManager : MonoBehaviour
                 Destroy(ball);
             }
         }
+    }
+
+    private void SubmitScore()
+    {
+        OnSubmitScore?.Invoke(profileManager.usernameInput.text, highScore);
     }
 }

@@ -5,8 +5,10 @@ using System.Collections.Generic;
 public class Ball : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D rb;
-    [SerializeField] SpriteRenderer sr;
-    [SerializeField] Collider2D collider;
+    [SerializeField] private SpriteRenderer sr;
+    [SerializeField] private Collider2D collider;
+
+    [SerializeField] private GameObject launchIndicator;
 
     public float nextKickTime;
 
@@ -25,6 +27,8 @@ public class Ball : MonoBehaviour
         rb.gravityScale = 0f;
 
         ColorPicker();
+        Instantiate(launchIndicator, new Vector2(transform.position.x, -4.5f), Quaternion.identity);
+
         StartCoroutine("WaitToLaunch");
     }
 

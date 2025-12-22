@@ -59,7 +59,7 @@ public class BallSpawner : MonoBehaviour
 
     private void LevelUp(int level)
     {
-        spawnInterval -= 0.5f;
+        spawnInterval = Mathf.Max(1f, spawnInterval - 0.4f);
     }
 
     private void SpawnBall()
