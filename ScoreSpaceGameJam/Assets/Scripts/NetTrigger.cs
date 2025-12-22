@@ -5,11 +5,20 @@ public class NetTrigger : MonoBehaviour
     [SerializeField] BoxCollider2D boxCollider;
     [SerializeField] SpriteRenderer spriteRenderer;
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerStay2D(Collider2D other)
     {
         SpriteRenderer ballRenderer = other.GetComponent<SpriteRenderer>();
         if (spriteRenderer == null) return;
         if (!other.gameObject.CompareTag("Ball")) return;
+
+        Bounds net = boxCollider.bounds;
+        Bounds ball = other.bounds;
+
+        bool fullyInside =
+            ball.min.x >= net.min.x && ball.max.x <= net.max.x &&
+            ball.min.y >= net.min.y && ball.max.y <= net.max.y;
+
+        if (!fullyInside) return;
 
         if (ballRenderer.color == spriteRenderer.color)
         {

@@ -5,6 +5,8 @@ public class UIManager : MonoBehaviour
 {
     [SerializeField] private TMP_Text livesText;
     [SerializeField] private TMP_Text pointsText;
+    [SerializeField] private TMP_Text highScoreText;
+
     [SerializeField] private GameObject startPanel;
     [SerializeField] private GameObject statsPanel;
 
@@ -18,6 +20,7 @@ public class UIManager : MonoBehaviour
     {
         GameManager.OnLivesChanged += HandleLivesChanged;
         GameManager.OnPointsChanged += HandlePointsChanged;
+        GameManager.OnHighScore += HandleHighScore;
         GameManager.OnGameStarted += HandleGameStarted;
         GameManager.OnGameOver += HandleGameOver;
     }
@@ -27,6 +30,7 @@ public class UIManager : MonoBehaviour
     {
         GameManager.OnLivesChanged -= HandleLivesChanged;
         GameManager.OnPointsChanged -= HandlePointsChanged;
+        GameManager.OnHighScore -= HandleHighScore;
         GameManager.OnGameStarted -= HandleGameStarted;
         GameManager.OnGameOver -= HandleGameOver;
     }
@@ -41,6 +45,12 @@ public class UIManager : MonoBehaviour
     private void HandlePointsChanged(int points)
     {
         if (pointsText != null) pointsText.text = $"Points: {points}";
+        
+    }
+
+    private void HandleHighScore(int highScore)
+    {
+        if (highScoreText != null) highScoreText.text = $"Highscore: {highScore}";
     }
 
     //When game starts

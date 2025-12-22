@@ -9,13 +9,15 @@ public class GameManager : MonoBehaviour
     //Events
     public static event Action<int> OnLivesChanged;
     public static event Action<int> OnPointsChanged;
+    public static event Action<int> OnHighScore;
     public static event Action OnGameStarted;
     public static event Action OnGameOver;
     public static event Action<int> OnLevelUp;
 
-    private int startingLives = 5;
+    private int startingLives = 3;
 
     public int points { get; private set; }
+    public int highScore { get; private set; }
     public int lives { get; private set; }
     public bool IsRunning { get; private set; } //Is game running?
 
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
     private void ResetGameState()
     {
         points = 0;
+        highScore = PlayerPrefs.GetInt("hs", 0);
         lives = Mathf.Max(0, startingLives);
         IsRunning = false;
 
@@ -54,6 +57,7 @@ public class GameManager : MonoBehaviour
         IsRunning = true;
 
         OnGameStarted?.Invoke();
+        OnHighScore?.Invoke(highScore);
     }
 
     public void OnLeaderboardClicked()
@@ -70,12 +74,21 @@ public class GameManager : MonoBehaviour
         points += amount; //Add points
         OnPointsChanged?.Invoke(points); //Invoke subs (UIManager)
 
+        if (points > highScore)
+        {
+            Debug.Log(points);
+            highScore = points;
+            PlayerPrefs.SetInt("hs", highScore);
+            PlayerPrefs.Save();
+            OnHighScore?.Invoke(highScore);
+        }
+
         while (points >= nextLevelUpScore)
         {
             level++;
             OnLevelUp?.Invoke(level);
 
-            nextLevelUpScore += 1;
+            nextLevelUpScore += 5;
         }
     }
 
